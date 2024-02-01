@@ -1,0 +1,178 @@
+using System;
+using System.Collections.Generic;
+
+// Add a book class
+class Book
+{
+    public string Title { get; set; }
+    public Author Author { get; set; }
+    public Category Category { get; set; }
+    public int Year { get; set; }
+    public decimal Price { get; set; }
+
+    // Make a constructor to make it easier to manage
+    public Book(string title, Author author, Category category, int year, decimal price)
+    {
+        Title = title;
+        Author = author;
+        Category = category;
+        Year = year;
+        Price = price;
+    }
+}
+
+
+class Author
+{
+    public string Name { get; set; }
+    public string Biography { get; set; }
+
+
+    public Author(string name, string biography)
+    {
+        Name = name;
+        Biography = biography;
+    }
+}
+
+// Category Class (Sealed)
+sealed class Category
+{
+    public string CategoryName { get; set; }
+    public string Description { get; set; }
+
+    
+    public Category(string categoryName, string description)
+    {
+        CategoryName = categoryName;
+        Description = description;
+    }
+}
+
+// LibraryManager Class (Static)
+static class LibraryManager
+{
+    private static List<Book> books = new List<Book>();
+
+    public static void AddBook(Book book)
+    {
+        books.Add(book);
+    }
+
+    public static void RemoveBook(string title)
+    {
+        // set the initial value of bookToRemove to null
+        Book bookToRemove = null;
+
+        // check if there is an existing book with that specific title
+        foreach (Book book in books)
+        {
+            if (book.Title == title)
+            {
+                bookToRemove = book;
+                break;
+            }
+        }
+
+        if (bookToRemove != null)
+        {
+            books.Remove(bookToRemove);
+            Console.WriteLine($"{title} has been removed from the library.");
+        }
+        else
+        {
+            Console.WriteLine($"{title} not found in the library.");
+        }
+    }
+
+    // print the list of books using the foreach loop
+    public static void ListAllBooks()
+    {
+        Console.WriteLine("List of Books in the Library:");
+        foreach (var book in books)
+        {
+            Console.WriteLine($"Title: {book.Title}, Author: {book.Author.Name}, Category: {book.Category.CategoryName}, Year: {book.Year}, Price: {book.Price:C}");
+        }
+    }
+}
+
+// Program Class
+class Program
+{
+    static void Main()
+    {
+        while (true)
+        {
+            Console.WriteLine("\nLibrary Management System Menu:");
+            Console.WriteLine("1. Add Book");
+            Console.WriteLine("2. Remove Book");
+            Console.WriteLine("3. List All Books");
+            Console.WriteLine("4. Exit");
+
+            Console.WriteLine("Enter your choice (1-4): ");
+
+            // using the parse method to convert string into int
+            int choice = int.Parse(Console.ReadLine());
+
+
+            switch (choice)
+            {
+                case 1:
+                    AddBook();
+                    break;
+                case 2:
+                    RemoveBook();
+                    break;
+                case 3:
+                    LibraryManager.ListAllBooks();
+                    break;
+                case 4:
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    break;
+            }
+        }
+    }
+
+    static void AddBook()
+    {
+        Console.Write("Enter Title: ");
+        string title = Console.ReadLine();
+
+        Console.Write("Enter Author Name: ");
+        string authorName = Console.ReadLine();
+
+        Console.Write("Enter Author Biography: ");
+        string authorBiography = Console.ReadLine();
+
+        Console.Write("Enter Category: ");
+        string categoryName = Console.ReadLine();
+
+        Console.Write("Enter Category Description: ");
+        string categoryDescription = Console.ReadLine();
+
+        Console.Write("Enter Year: ");
+        int year = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter Price: ");
+        decimal price = decimal.Parse(Console.ReadLine());
+
+        Author author = new Author(authorName, authorBiography);
+        Category category = new Category(categoryName, categoryDescription);
+        Book newBook = new Book(title, author, category, year, price);
+
+        LibraryManager.AddBook(newBook);
+
+        Console.WriteLine($"{title} has been added to the library.");
+    }
+
+    static void RemoveBook()
+    {
+        Console.Write("Enter the Title of the Book to Remove: ");
+        string titleToRemove = Console.ReadLine();
+
+        LibraryManager.RemoveBook(titleToRemove);
+    }
+}
